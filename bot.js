@@ -50,7 +50,7 @@ tg.controller('OtherwiseController', ($) => {
         } else { errIsntColor($) }
 
         sendColorPic($, color)
-    } else if (isValidRGB($.message.text)) { // TODO:
+    } else if (isValidRGB($.message.text)) {
         console.log(hexrgb.rgb2hex($.message.text))
         sendColorPic($, hexrgb.rgb2hex($.message.text).slice(1))
     } else {
