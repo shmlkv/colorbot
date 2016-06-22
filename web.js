@@ -1,15 +1,18 @@
 var express = require('express');
-var packageInfo = require('./package.json');
-
 var app = express();
 
+app.use(express.static(__dirname + '/public'));
+
 app.get('/', function (req, res) {
-  res.json({ version: packageInfo.version });
+  res.sendfile(__dirname + '/public' + '/index.html');
 });
 
-var server = app.listen(8081, function () { // process.env.PORT
-  var host = server.address().address;
-  var port = server.address().port;
-
-  console.log('Web server started on host: http://', host, port);
+app.get('*', function(req, res){
+  res.sendfile(__dirname + '/public' + '/error.html');
 });
+
+app.listen(process.env.PORT || 3000, function(){
+  console.log('App is runned on port ' +  3000 || process.env.PORT);
+});
+
+module.exports = app;
