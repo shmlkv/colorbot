@@ -16,6 +16,40 @@ img{
     height: 200px;
     display: block;
     margin: 7px auto;
+   -webkit-animation-name: spin;
+    -webkit-animation-duration: 100ms;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
+    -moz-animation-name: spin;
+    -moz-animation-duration: 100ms;
+    -moz-animation-iteration-count: infinite;
+    -moz-animation-timing-function: linear;
+    -ms-animation-name: spin;
+    -ms-animation-duration: 100ms;
+    -ms-animation-iteration-count: infinite;
+    -ms-animation-timing-function: linear;
+    animation-name: spin;
+    animation-duration: 100ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+img:hover{
+    -webkit-animation-name: spin;
+    -webkit-animation-duration: 700ms;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
+    -moz-animation-name: spin;
+    -moz-animation-duration: 700ms;
+    -moz-animation-iteration-count: infinite;
+    -moz-animation-timing-function: linear;
+    -ms-animation-name: spin;
+    -ms-animation-duration: 700ms;
+    -ms-animation-iteration-count: infinite;
+    -ms-animation-timing-function: linear;
+    animation-name: spin;
+    animation-duration: 700ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
 }
 a{
     color: #3ca2d9;
@@ -41,4 +75,13 @@ hr{
     border: none;
     border-bottom: 1px solid #e0e0e0;
 	margin: 7px 0 14px;
+}
+
+@keyframes spin {
+    from {
+        transform:rotate(0deg);
+    }
+    to {
+        transform:rotate(360deg);
+    }
 }
