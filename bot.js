@@ -4,18 +4,20 @@ var config = require('./config.json'),
     tg = require('telegram-node-bot')(config.token),
     fs = require('fs'),
     req = require('tiny_request'),
-    hexrgb = require('hexrgb'),
-    ColorThief = require("thief");
-    colorThief = new ColorThief()
+    hexrgb = require('hexrgb')
 
 tg.router.
     when(['/start'], 'StartController').
+    when(['/help'], 'HelpController').
     when(['/toHEX :color'], 'ToHexController').
     when(['/toRGB :color'], 'ToRgbController').
     otherwise('OtherwiseController')
 
 tg.controller('StartController', ($) => {
-    $.sendMessage('Hello! 👋\n\nWhat I can do:\n\n• Preview of colors like: `#3300ff`, `#30f` or `rgb(51,0,255)`\n• Convert RGB to HEX /toHEX `rgb(51,0,255)` \n• Convert HEX to RGB /toRGB `#3300ff`', { parse_mode: 'Markdown' });
+    $.routeTo("/help")
+})
+tg.controller('HelpController', ($) => {
+    $.sendMessage('Hello! 👋\n\nWhat I can do:\n\n• Preview of colors like: `#3300ff`, `#30f` or `rgb(51,0,255)`\n• Convert RGB to HEX /toHEX `rgb(51,0,255)` \n• Convert HEX to RGB /toRGB `#3300ff`\n\nCommands you can use:\n\n• /help for this message', { parse_mode: 'Markdown' });
 })
 tg.controller('ToHexController', ($) => {
     tg.for('/toHEX :color', ($) => {
@@ -43,12 +45,12 @@ tg.controller('OtherwiseController', ($) => {
             var color = $.message.text.slice(1, 7);
         } else if ($.message.text.length === 4) {
             var color = $.message.text[1] + $.message.text[1]
-                + $.message.text[2] + $.message.text[2]
-                + $.message.text[3] + $.message.text[3]
+                      + $.message.text[2] + $.message.text[2]
+                      + $.message.text[3] + $.message.text[3]
         } else { errIsntColor($) }
 
         sendColorPic($, color)
-    } else if (isValidRGB($.message.text)) { // TODO 
+    } else if (isValidRGB($.message.text)) { // TODO:
         console.log(hexrgb.rgb2hex($.message.text))
         sendColorPic($, hexrgb.rgb2hex($.message.text).slice(1))
     } else {
@@ -57,14 +59,18 @@ tg.controller('OtherwiseController', ($) => {
 
 })
 function sendColorPic($, color) {
+    color = color.toLowerCase();
     var filename = '.\\temp\\' + color + '.png'
     var wstream = fs.createWriteStream(filename)
 
     wstream.on('finish', () => {
+        // gm(filename)
+        //     .resize(240, 240)
+        //     .noProfile()
+        //     .write(filename, function (err) {
+        //         if (!err) console.log('done');
+        //     });
         $.sendPhoto(fs.createReadStream(filename))
-        var image = fs.readFileSync(filename);
-        var rgb = colorThief.getColor(image);
-        console.log(rgb)
         fs.unlink(filename)
     })
 
