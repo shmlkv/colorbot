@@ -8,7 +8,7 @@ app.get('/', function (req, res) {
 });
 
 app.get('*', function(req, res){
-  res.sendfile(__dirname + '/public' + '/error.html');
+  res.redirect('/');
 });
 
 app.listen(process.env.PORT || 3000, function(){
