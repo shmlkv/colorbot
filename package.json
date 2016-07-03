@@ -8,9 +8,10 @@
     "colors-palette": "0.0.4",
     "express": "*",
     "hexrgb": "0.0.2",
+    "imagemagick": "*",
     "telegram-node-bot": "*",
     "tiny_request": "*",
-    "imagemagick": "*"
+    "url-to-image": "1.0.0"
   },
   "devDependencies": {},
   "scripts": {

@@ -5,7 +5,8 @@ var config = require('./config.json'),
     req = require('tiny_request'),
     im = require('imagemagick'),
     hexrgb = require('hexrgb'),
-    colorPalette = require("colors-palette")
+    colorPalette = require("colors-palette"),
+    urlToImage = require('url-to-image')
 
 var botan = require('botanio')(config.botanio);
 
@@ -76,6 +77,51 @@ class ToRgbController extends TelegramBaseController {
     }
 }
 
+class SiteColorsController extends TelegramBaseController {
+
+    siteColorsHandler($) {
+        if (isValidURL($.query.url)) {
+            $.sendMessage("Murr~")
+
+            var dir = './temp/' + Math.random().toString(36).substr(2, 5) + '.png'
+            console.log(dir)
+            urlToImage($.query.url, dir).then(function () {
+                colorPalette(dir, 3, function (err, colors) {
+                    if (err) {
+                        $.sendMessage(err);
+                        console.error(err);
+                        return false;
+                    } else {
+                        console.log($.query.url)
+                        console.log(colors)
+                        var detected_colors = []
+                        colors.result.forEach(function (item, index, array) {
+                            var color = '#' + item.hex.toLowerCase()
+                            detected_colors.push(color)
+                            $.sendMessage(color);
+                            sendColorPic($, color)
+                        });
+                    }
+                    fs.unlinkSync(dir);
+                });
+            }).catch(function (err) {
+                console.error(err);
+            });
+
+
+
+        } else {
+            urlErr($)
+        }
+
+    }
+
+    get routes() {
+        return {
+            '/siteColors :url': 'siteColorsHandler'
+        }
+    }
+}
 class PingController extends TelegramBaseController {
 
     pingHandler($) {
@@ -134,8 +180,8 @@ class OtherwiseController extends TelegramBaseController {
             ///console.log(getFile($.message.photo.file_id))
             //          var filename = '.\\temp\\' + $.message.photo[0].file_id + '.png'
 
-               // $.sendMessage('https://api.telegram.org/file/bot' + config.token + '/' + $.message.photo[0].file_id)
-          
+            // $.sendMessage('https://api.telegram.org/file/bot' + config.token + '/' + $.message.photo[0].file_id)
+
 
         } else if (isValidHEX($.message.text)) {
             if ($.message.text.length === 7) {
@@ -160,6 +206,7 @@ tg.router
     .when(['/toHEX :color'], new ToHexController())
     .when(['/toRGB :color'], new ToRgbController())
     .when(['/randomColor'], new RandomColorController())
+    .when(['/siteColors :url'], new SiteColorsController())
     .when(['/ping'], new PingController())
     .otherwise(new OtherwiseController())
 
@@ -167,6 +214,11 @@ function sendColorPic($, color) {
     console.log('Sending pic with color: ' + color)
     color = color.toLowerCase().slice(1);
     $.sendPhoto({ url: 'http://www.colorhexa.com/' + color + '.png', filename: 'color.png' })
+}
+
+function isValidURL(sample) {
+    var regexp = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/;
+    return regexp.test(sample);
 }
 
 function isValidRGB(sample) {
@@ -183,6 +235,11 @@ function isValidHEX(sample) {
 function colorErr($) {
     $.sendMessage('I dont think that it\'s a color', { parse_mode: 'Markdown' });
 }
+
+function urlErr($) {
+    $.sendMessage('Sorry, but isn\'t valid url', { parse_mode: 'Markdown' });
+}
+
 
 // function isValidColor(sample, type){
 //     if(type=='hex'){}
