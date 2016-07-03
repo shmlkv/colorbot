@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "botanio": "*",
     "express": "*",
-    "telegram-node-bot": "^2.1.3",
     "hexrgb": "0.0.2",
+    "telegram-node-bot": "2.1.3",
     "tiny_request": "*"
   },
   "devDependencies": {},
