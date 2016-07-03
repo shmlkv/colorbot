@@ -25,11 +25,11 @@ tg.controller('StartController', ($) => {
 })
 
 tg.controller('PingController', ($) => {
-    $.sendMessage(config.greeting[Math.floor(Math.random() * config.greeting.length)]);
+    $.sendMessage("Murr~");
 })
 
 tg.controller('HelpController', ($) => {
-    $.sendMessage('Hello! 👋\n\nWhat I can do:\n\n• Preview of colors like: `#3300ff`, `#30f` or `rgb(51,0,255)`\n• Convert RGB to HEX /toHEX `rgb(51,0,255)` \n• Convert HEX to RGB /toRGB `#3300ff`\n• Generate random color by /randomColor', { parse_mode: 'Markdown' });
+    $.sendMessage('Hello! 👋\n\nWhat I can do:\n\n• Preview of colors like: `#3300ff`, `#30f` or `rgb(51,0,255)`\n• Convert RGB to HEX /toHEX `rgb(51,0,255)` \n• Convert HEX to RGB /toRGB `#3300ff`\n• /randomColor generate random color\n• /help for this message', { parse_mode: 'Markdown' });
     botan.track($.message, 'Help', function (error, response, body) {
         if (error) {
             console.log(error);
@@ -69,9 +69,20 @@ tg.controller('RandomColorController', ($) => {
 
 tg.controller('OtherwiseController', ($) => {
     if ($.message.photo) {
-        console.log($.message.photo)
+        //
+        var colorPalette = require("colors-palette");
+        colorPalette('.\\temp\\shmlkv.png', 1, function (err, colors) {
+            if (err) {
+                console.error(err);
+                return false;
+            }
+            console.log(colors);
+        });
+        //
+        
         var downloadUrl = "https://api.telegram.org/file/bot" + config.token + "/" + $.message.photo.file_id;
-
+        //var downloadUrl = getFile($.message.photo.file_id)
+        ///console.log(getFile($.message.photo.file_id))
         var filename = '.\\temp\\' + $.message.photo[0].file_id + '.png'
         var wstream = fs.createWriteStream(filename)
 
@@ -146,7 +157,6 @@ function randomHEX() {
     var random = Math.random();
     var exponent = --random.toExponential().split('-')[1];
 
-    // Make sure random number is between 1.0 and 0.1 to assure correct hex values.
     random *= Math.pow(10, exponent);
 
     return '#' + (~~(random * (1 << 24))).toString(16);

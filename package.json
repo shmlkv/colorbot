@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "botanio": "*",
+    "colors-palette": "0.0.4",
     "express": "*",
     "hexrgb": "0.0.2",
     "telegram-node-bot": "2.1.3",
