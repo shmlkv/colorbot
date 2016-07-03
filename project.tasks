@@ -7,6 +7,7 @@ Project TODOs:
     ☐ Color schemes based on two colors  @high
     ☐ Host app on Heroku
         ☐ Page of bot
+    ☐ Is valid color (one func for all types)
     For fun:
         ☐ Rainbow in description of bot
 
