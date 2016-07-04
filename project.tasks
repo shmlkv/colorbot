@@ -7,6 +7,8 @@ Project TODOs:
     ✔ Random color @done
     ☐ Color schemes based on color
     ☐ Color schemes based on two colors  @high
+    ✔ funcs toLowerCase @done
+    ☐ not async sending colors in /sitecolors
     ✔ Host app on Heroku @done
         ✔ Page of bot @done
     ☐ Is valid color (one func for all types)

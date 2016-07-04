@@ -9,7 +9,7 @@ var config = require('./config.json'),
     urlToImage = require('url-to-image'),
     gm = require('gm').subClass({ imageMagick: true })
 
-var botan = require('botanio')(config.botanio);
+//var botan = require('botanio')(config.botanio);
 
 var Telegram = require('telegram-node-bot'),
     TelegramBaseController = Telegram.TelegramBaseController,
@@ -18,7 +18,7 @@ var Telegram = require('telegram-node-bot'),
 class StartController extends TelegramBaseController {
 
     startHandler($) {
-        $.sendMessage('Hello! 👋\n\nWhat I can do:\n\n• Preview of colors like: `#3300ff`, `#30f` or `rgb(51,0,255)`\n• Convert RGB to HEX /toHEX `rgb(51,0,255)` \n• Convert HEX to RGB /toRGB `#3300ff`\n• /randomColor generate random color\n• /help for this message', { parse_mode: 'Markdown' });
+        $.sendMessage('Hello! 👋\n\nWhat I can do:\n\n• Preview of colors like: `#3300ff`, `#30f` or `rgb(51,0,255)`\n• Convert RGB to HEX /toHEX `rgb(51,0,255)` \n• Convert HEX to RGB /toRGB `#3300ff`\n• /randomColor generate random color\n• /siteColors `http://site.com/` to get color scheme of site \n• /help for this message', { parse_mode: 'Markdown' });
     }
 
     get routes() {
@@ -31,8 +31,7 @@ class StartController extends TelegramBaseController {
 class HelpController extends TelegramBaseController {
 
     helpHandler($) {
-        $.sendMessage('Hello! 👋\n\nWhat I can do:\n\n• Preview of colors like: `#3300ff`, `#30f` or `rgb(51,0,255)`\n• Convert RGB to HEX /toHEX `rgb(51,0,255)` \n• Convert HEX to RGB /toRGB `#3300ff`\n• /randomColor generate random color\n• /help for this message', { parse_mode: 'Markdown' });
-
+        $.sendMessage('Hello! 👋\n\nWhat I can do:\n\n• Preview of colors like: `#3300ff`, `#30f` or `rgb(51,0,255)`\n• Convert RGB to HEX /tohex `rgb(51,0,255)` \n• Convert HEX to RGB /torgb `#3300ff`\n• /randomcolor generate random color\n• /sitescheme `http://site.com/` to get color scheme of site \n• /help for this message', { parse_mode: 'Markdown' });
     }
 
     get routes() {
@@ -55,7 +54,7 @@ class ToHexController extends TelegramBaseController {
 
     get routes() {
         return {
-            '/toHEX :color': 'toHexHandler'
+            '/tohex :color': 'toHexHandler'
         }
     }
 }
@@ -73,20 +72,20 @@ class ToRgbController extends TelegramBaseController {
 
     get routes() {
         return {
-            '/toRGB :color': 'toRgbHandler'
+            '/torgb :color': 'toRgbHandler'
         }
     }
 }
 
-class SiteColorsController extends TelegramBaseController {
+class SiteSchemeController extends TelegramBaseController {
 
-    siteColorsHandler($) {
+    siteSchemeHandler($) {
         if (isValidURL($.query.url)) {
             $.sendMessage("Murr~")
 
             var dir = './temp/' + Math.random().toString(36).substr(2, 5) + '.png'
             console.log(dir)
-            urlToImage($.query.url, dir, { width: 600, height: 800 }).then(function () {
+            urlToImage($.query.url, dir, { width: 600, height: 600 }).then(function () {
                 colorPalette(dir, 3, function (err, colors) {
                     if (err) {
                         console.error(err);
@@ -98,7 +97,6 @@ class SiteColorsController extends TelegramBaseController {
                         colors.result.forEach(function (item, index, array) {
                             var color = '#' + item.hex.toLowerCase()
                             detected_colors.push(color)
-                            $.sendMessage(color);
                             sendColorPic($, color)
 
                         });
@@ -109,8 +107,6 @@ class SiteColorsController extends TelegramBaseController {
                 console.error(err);
             });
 
-
-
         } else {
             urlErr($)
         }
@@ -119,7 +115,7 @@ class SiteColorsController extends TelegramBaseController {
 
     get routes() {
         return {
-            '/siteColors :url': 'siteColorsHandler'
+            '/sitescheme :url': 'siteSchemeHandler'
         }
     }
 }
@@ -152,7 +148,7 @@ class RandomColorController extends TelegramBaseController {
 
     get routes() {
         return {
-            '/randomColor': 'randomColorHandler'
+            '/randomcolor': 'randomColorHandler'
         }
     }
 }
@@ -160,8 +156,9 @@ class RandomColorController extends TelegramBaseController {
 class OtherwiseController extends TelegramBaseController {
     handle($) {
         if ($.message.photo) {
-            $.sendMessage("photo");
-            //
+            // $.sendMessage($.message._photo[0].fileId);
+            // $.sendPhoto($.message._photo[0].fileId)
+            // $.sendMessage('https://api.telegram.org/file/bot' + config.token + '/' + $.message.photo[0].file_id)
             // colorPalette('https://new.vk.com/images/safari_152.png', 3, function (err, colors) {
             //     if (err) {
             //         $.sendMessage(err);
@@ -176,12 +173,14 @@ class OtherwiseController extends TelegramBaseController {
             //     console.log(detected_colors)
             //     $.sendMessage('#' + colors.result[0].hex.toLowerCase());
             // });
+
+
             //
             //var downloadUrl = getFile($.message.photo.file_id)
             ///console.log(getFile($.message.photo.file_id))
             //          var filename = '.\\temp\\' + $.message.photo[0].file_id + '.png'
 
-            // $.sendMessage('https://api.telegram.org/file/bot' + config.token + '/' + $.message.photo[0].file_id)
+            // 
 
 
         } else if (isValidHEX($.message.text)) {
@@ -204,10 +203,10 @@ class OtherwiseController extends TelegramBaseController {
 tg.router
     .when('/start', new StartController())
     .when('/help', new HelpController())
-    .when(['/toHEX :color'], new ToHexController())
-    .when(['/toRGB :color'], new ToRgbController())
-    .when(['/randomColor'], new RandomColorController())
-    .when(['/siteColors :url'], new SiteColorsController())
+    .when(['/tohex :color'], new ToHexController())
+    .when(['/torgb :color'], new ToRgbController())
+    .when(['/randomcolor'], new RandomColorController())
+    .when(['/sitescheme :url'], new SiteSchemeController())
     .when(['/ping'], new PingController())
     .otherwise(new OtherwiseController())
 
@@ -220,7 +219,6 @@ function sendColorPic($, color) {
     gm(460, 460, color)
         .fontSize(50)
         .drawText(130, 240, color)
-        //.stroke('0000')
         .write(filename, function (err) {
             if (!err) {
                  $.sendPhoto({ path: filename })
@@ -230,7 +228,6 @@ function sendColorPic($, color) {
 
         });
     //fs.unlinkSync(filename)
-    // $.sendPhoto({ url: 'http://www.colorhexa.com/' + color + '.png', filename: 'image.jpg',  }, 'Foto inviata dal mio disco')
 }
 
 function isValidURL(sample) {

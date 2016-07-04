@@ -11,8 +11,8 @@ app.get('*', function(req, res){
   res.redirect('/');
 });
 
-app.listen(process.env.PORT || 3000, function(){
-  console.log('App is runned on port ' +  3000 || process.env.PORT);
+app.listen(process.env.PORT || 1233, function(){
+  console.log('App is runned on port ' +  3211 || process.env.PORT);
 });
 
 module.exports = app;
