@@ -7,11 +7,16 @@
     "botanio": "*",
     "colors-palette": "0.0.4",
     "express": "*",
+    "gm": "^1.22.0",
     "hexrgb": "0.0.2",
     "imagemagick": "*",
     "telegram-node-bot": "*",
     "tiny_request": "*",
     "url-to-image": "1.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/shmlkv/colorbot.git"
   },
   "devDependencies": {},
   "scripts": {

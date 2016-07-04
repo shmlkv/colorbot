@@ -6,7 +6,8 @@ var config = require('./config.json'),
     im = require('imagemagick'),
     hexrgb = require('hexrgb'),
     colorPalette = require("colors-palette"),
-    urlToImage = require('url-to-image')
+    urlToImage = require('url-to-image'),
+    gm = require('gm').subClass({ imageMagick: true })
 
 var botan = require('botanio')(config.botanio);
 
@@ -85,21 +86,21 @@ class SiteColorsController extends TelegramBaseController {
 
             var dir = './temp/' + Math.random().toString(36).substr(2, 5) + '.png'
             console.log(dir)
-            urlToImage($.query.url, dir).then(function () {
+            urlToImage($.query.url, dir, { width: 600, height: 800 }).then(function () {
                 colorPalette(dir, 3, function (err, colors) {
                     if (err) {
-                        $.sendMessage(err);
                         console.error(err);
                         return false;
                     } else {
-                        console.log($.query.url)
                         console.log(colors)
                         var detected_colors = []
+                        console.log('sended colors for site: ' + $.query.url)
                         colors.result.forEach(function (item, index, array) {
                             var color = '#' + item.hex.toLowerCase()
                             detected_colors.push(color)
                             $.sendMessage(color);
                             sendColorPic($, color)
+
                         });
                     }
                     fs.unlinkSync(dir);
@@ -212,8 +213,24 @@ tg.router
 
 function sendColorPic($, color) {
     console.log('Sending pic with color: ' + color)
-    color = color.toLowerCase().slice(1);
-    $.sendPhoto({ url: 'http://www.colorhexa.com/' + color + '.png', filename: 'color.png' })
+    color = color.toLowerCase()
+    // Math.random().toString(36).substr(2, 5)
+    var filename = __dirname + '/temp/' + 'colorpic' + '.png'
+    
+    gm(460, 460, color)
+        .fontSize(50)
+        .drawText(130, 240, color)
+        //.stroke('0000')
+        .write(filename, function (err) {
+            if (!err) {
+                 $.sendPhoto({ path: filename })
+            } else {
+                console.error(err)
+            }
+
+        });
+    //fs.unlinkSync(filename)
+    // $.sendPhoto({ url: 'http://www.colorhexa.com/' + color + '.png', filename: 'image.jpg',  }, 'Foto inviata dal mio disco')
 }
 
 function isValidURL(sample) {

@@ -1,14 +1,18 @@
 Project TODOs:
-    ☐ ImageMagick support
-        ☐ Dominant color on photo sending
-        ☐ Image with #color on sending color
+    ✔ ImageMagick support @done
+    ☐ Dominant color on photo sending
+    ✔ Image with #color on sending color @done
+    ☐ deleting color file after sending
     ☐ More variants for converting - like JAVA color
-    ☐ Random color
+    ✔ Random color @done
+    ☐ Color schemes based on color
     ☐ Color schemes based on two colors  @high
-    ☐ Host app on Heroku
-        ☐ Page of bot
+    ✔ Host app on Heroku @done
+        ✔ Page of bot @done
     ☐ Is valid color (one func for all types)
+    ☐ Caption on sended color photos 
     For fun:
         ☐ Rainbow in description of bot
-
-    ☐ Send bot to StoreBot
+    Final:
+        ☐ Desc of bot 
+        ☐ Post bot in StoreBot
