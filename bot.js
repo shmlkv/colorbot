@@ -81,7 +81,7 @@ class SiteSchemeController extends TelegramBaseController {
 
     siteSchemeHandler($) {
         if (isValidURL($.query.url)) {
-            $.sendMessage("Murr~")
+            $.sendMessage('Okay, now you need to wait..~', { parse_mode: 'Markdown' });
 
             var dir = './temp/' + Math.random().toString(36).substr(2, 5) + '.png'
             console.log(dir)
@@ -142,7 +142,6 @@ class RandomColorController extends TelegramBaseController {
 
         var color = '#' + (~~(random * (1 << 24))).toString(16);
 
-        $.sendMessage(color)
         sendColorPic($, color)
     }
 
@@ -211,23 +210,30 @@ tg.router
     .otherwise(new OtherwiseController())
 
 function sendColorPic($, color) {
+
     console.log('Sending pic with color: ' + color)
     color = color.toLowerCase()
     // Math.random().toString(36).substr(2, 5)
-    var filename = __dirname + '/temp/' + 'colorpic' + '.png'
-    
+    var filename = __dirname + '/temp/' + color + '.png'
+
     gm(460, 460, color)
         .fontSize(50)
         .drawText(130, 240, color)
         .write(filename, function (err) {
             if (!err) {
-                 $.sendPhoto({ path: filename })
+                var file = fs.createReadStream(filename);
+                $.sendPhoto(file, { caption: color })
+                
+                file.on('end', function () {
+                    fs.unlink(fileName);
+                    console.log("ASD")
+                });
             } else {
                 console.error(err)
             }
 
         });
-    //fs.unlinkSync(filename)
+
 }
 
 function isValidURL(sample) {
