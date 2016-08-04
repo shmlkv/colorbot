@@ -86,7 +86,7 @@ class SiteSchemeController extends TelegramBaseController {
             var dir = './temp/' + Math.random().toString(36).substr(2, 5) + '.png'
             console.log(dir)
             urlToImage($.query.url, dir, { width: 600, height: 600 }).then(function () {
-                colorPalette(dir, 3, function (err, colors) {
+                colorPalette(dir, 5, function (err, colors) {
                     if (err) {
                         console.error(err);
                         return false;
@@ -97,7 +97,7 @@ class SiteSchemeController extends TelegramBaseController {
                         colors.result.forEach(function (item, index, array) {
                             var color = '#' + item.hex.toLowerCase()
                             detected_colors.push(color)
-                            sendColorPic($, color)
+                            sendColorPic($, color, ' - ' + item.percent)
 
                         });
                     }
@@ -154,10 +154,16 @@ class RandomColorController extends TelegramBaseController {
 
 class OtherwiseController extends TelegramBaseController {
     handle($) {
+        // console.log($.message._photo[0]._fileId)
+        if ($.message._photo) {
+            // $.sendMessage($.message._document)
+            //$.sendMessage($.message._photo._fileId)
+            //$.sendPhoto($.message._photo[0].fileId);
+        }
         if ($.message.photo) {
-            // $.sendMessage($.message._photo[0].fileId);
-            // $.sendPhoto($.message._photo[0].fileId)
-            // $.sendMessage('https://api.telegram.org/file/bot' + config.token + '/' + $.message.photo[0].file_id)
+            $.sendMessage($.message._photo[0].fileId);
+            $.sendPhoto($.message._photo[0].fileId)
+            //$.sendMessage('https://api.telegram.org/file/bot' + config.token + '/' + $.message.photo[0].file_id)
             // colorPalette('https://new.vk.com/images/safari_152.png', 3, function (err, colors) {
             //     if (err) {
             //         $.sendMessage(err);
@@ -174,13 +180,10 @@ class OtherwiseController extends TelegramBaseController {
             // });
 
 
-            //
-            //var downloadUrl = getFile($.message.photo.file_id)
-            ///console.log(getFile($.message.photo.file_id))
+
+            // var downloadUrl = getFile($.message.photo.file_id)
+            // /console.log(getFile($.message.photo.file_id))
             //          var filename = '.\\temp\\' + $.message.photo[0].file_id + '.png'
-
-            // 
-
 
         } else if (isValidHEX($.message.text)) {
             if ($.message.text.length === 7) {
@@ -209,29 +212,37 @@ tg.router
     .when(['/ping'], new PingController())
     .otherwise(new OtherwiseController())
 
-function sendColorPic($, color) {
+function sendColorPic($, color, desc) {
 
     console.log('Sending pic with color: ' + color)
     color = color.toLowerCase()
-    // Math.random().toString(36).substr(2, 5)
-    var filename = __dirname + '/temp/' + color + '.png'
 
+    var filename = __dirname + '/temp/' + color + '.png'
     gm(460, 460, color)
         .fontSize(50)
         .drawText(130, 240, color)
         .write(filename, function (err) {
             if (!err) {
-                var file = fs.createReadStream(filename);
-                $.sendPhoto(file, { caption: color })
-                
-                file.on('end', function () {
-                    fs.unlink(fileName);
-                    console.log("ASD")
-                });
+                if (desc) {
+
+                    $.sendPhoto(fs.createReadStream(filename, fs.unlink(filename)), { caption: color + desc })
+                } else {
+                    fs.readFile(filename, function () {
+
+                        var stream = fs.createReadStream(filename)
+                        stream.pipe(res);
+                    stream.on('close', function () {
+                        fs.unlink(filename)
+                        console.log("!")
+                    });
+                        $.sendPhoto(g, { caption: color })
+                    })
+                    
+                }
+
             } else {
                 console.error(err)
             }
-
         });
 
 }
@@ -259,8 +270,8 @@ function colorErr($) {
 function urlErr($) {
     $.sendMessage('Sorry, but isn\'t valid url', { parse_mode: 'Markdown' });
 }
-
-
-// function isValidColor(sample, type){
-//     if(type=='hex'){}
-// }
+function finishedReading(filename) {
+    fs.unlink(filename)
+    fs.unlinkSync(filename);
+    console.log("!")
+}

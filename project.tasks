@@ -3,16 +3,16 @@ Project TODOs:
     ☐ Dominant color on photo sending
     ✔ Image with #color on sending color @done
     ☐ deleting color file after sending
-    ☐ More variants for converting - like JAVA color
+    ✘ More variants for converting - like JAVA color @cancelled
     ✔ Random color @done
-    ☐ Color schemes based on color
-    ☐ Color schemes based on two colors  @high
+    ✘ Color schemes based on color @cancelled
+    ✘ Color schemes based on two colors  @high @cancelled
     ✔ funcs toLowerCase @done
-    ☐ not async sending colors in /sitecolors
+    ✘ not async sending colors in /sitecolors @cancelled
     ✔ Host app on Heroku @done
         ✔ Page of bot @done
-    ☐ Is valid color (one func for all types)
-    ☐ Caption on sended color photos 
+    ✘ Is valid color (one func for all types) @cancelled
+    ✔ Caption on sended color photos @done
     For fun:
         ☐ Rainbow in description of bot
     Final:
