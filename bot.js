@@ -65,6 +65,8 @@ class ToRgbController extends TelegramBaseController {
         console.log('toRGB ' + $.query.color)
         if (isValidHEX($.query.color)) {
             $.sendMessage(hexrgb.hex2rgb($.query.color))
+            sendColorPic($, $.query.color, hexrgb.hex2rgb($.query.color), hexrgb.hex2rgb($.query.color))
+            
         } else {
             $.sendMessage(colorErr($))
         }
@@ -142,7 +144,7 @@ class RandomColorController extends TelegramBaseController {
 
         var color = '#' + (~~(random * (1 << 24))).toString(16);
 
-        sendColorPic($, color)
+        sendColorPic($, color, '\nRandom color')
     }
 
     get routes() {
@@ -212,38 +214,57 @@ tg.router
     .when(['/ping'], new PingController())
     .otherwise(new OtherwiseController())
 
-function sendColorPic($, color, desc) {
+function sendColorPic($, color, desc, textonpic) {
 
     console.log('Sending pic with color: ' + color)
     color = color.toLowerCase()
 
-    var filename = __dirname + '/temp/' + color + '.png'
-    gm(460, 460, color)
-        .fontSize(50)
-        .drawText(130, 240, color)
-        .write(filename, function (err) {
-            if (!err) {
-                if (desc) {
+    //var filename = __dirname + '/temp/' + color + '.png'
+    var filename = __dirname + '/temp/colorpic.png'
 
-                    $.sendPhoto(fs.createReadStream(filename, fs.unlink(filename)), { caption: color + desc })
-                } else {
-                    fs.readFile(filename, function () {
+    // console.log(filename)
+    if (textonpic) {
+        gm(460, 460, color)
+            .fontSize(50)
+            .drawText(40, 240, textonpic)
+            .write(filename, function (err) {
+                if (!err) {
+                    if (desc) {
 
-                        var stream = fs.createReadStream(filename)
-                        stream.pipe(res);
-                    stream.on('close', function () {
-                        fs.unlink(filename)
-                        console.log("!")
-                    });
-                        $.sendPhoto(g, { caption: color })
-                    })
-                    
+                        $.sendPhoto(fs.createReadStream(filename), { caption: color + '\n' + desc })
+                    }
                 }
+            })
+    } else {
+        gm(460, 460, color)
+            .fontSize(50)
+            .drawText(130, 240, color)
+            .write(filename, function (err) {
+                if (!err) {
+                    if (desc) {
 
-            } else {
-                console.error(err)
-            }
-        });
+                        $.sendPhoto(fs.createReadStream(filename), { caption: color + desc })
+
+                    } else {
+                        // fs.readFile(filename, function () {
+                        $.sendPhoto(fs.createReadStream(filename), { caption: color })
+
+                        //     var stream = fs.createReadStream(filename)
+                        //     stream.pipe(res);
+                        //     stream.on('close', function () {
+                        //         fs.unlink(filename)
+                        //         console.log("!")
+                        //     });
+                        // })
+
+                    }
+
+                } else {
+                    console.error(err)
+                }
+            });
+    }
+
 
 }
 
