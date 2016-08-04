@@ -17,24 +17,6 @@ img{
     display: block;
     margin: 7px auto;
    -webkit-animation-name: spin;
-    -webkit-animation-duration: 100ms;
-    -webkit-animation-iteration-count: infinite;
-    -webkit-animation-timing-function: linear;
-    -moz-animation-name: spin;
-    -moz-animation-duration: 100ms;
-    -moz-animation-iteration-count: infinite;
-    -moz-animation-timing-function: linear;
-    -ms-animation-name: spin;
-    -ms-animation-duration: 100ms;
-    -ms-animation-iteration-count: infinite;
-    -ms-animation-timing-function: linear;
-    animation-name: spin;
-    animation-duration: 100ms;
-    animation-iteration-count: infinite;
-    animation-timing-function: linear;
-}
-img:hover{
-    -webkit-animation-name: spin;
     -webkit-animation-duration: 700ms;
     -webkit-animation-iteration-count: infinite;
     -webkit-animation-timing-function: linear;
@@ -51,11 +33,29 @@ img:hover{
     animation-iteration-count: infinite;
     animation-timing-function: linear;
 }
+img:hover{
+    -webkit-animation-name: spin;
+    -webkit-animation-duration: 100ms;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
+    -moz-animation-name: spin;
+    -moz-animation-duration: 100ms;
+    -moz-animation-iteration-count: infinite;
+    -moz-animation-timing-function: linear;
+    -ms-animation-name: spin;
+    -ms-animation-duration: 100ms;
+    -ms-animation-iteration-count: infinite;
+    -ms-animation-timing-function: linear;
+    animation-name: spin;
+    animation-duration: 100ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
 a{
     color: #3ca2d9;
 }
 .btn{
-     font-size: 13px;
+    font-size: 13px;
     font-weight: bold;
     line-height: 100%;
     color: #FFF;
@@ -66,10 +66,12 @@ a{
     padding: 15px 27px 13px;
     text-transform: uppercase;
 }
+.btn_footer{
+    background: #54b3e6;
+}
 .container{
 	margin: 0 auto;
     max-width: 424px;
-    padding-top: 38px;
 }
 hr{
     border: none;
@@ -79,9 +81,9 @@ hr{
 
 @keyframes spin {
     from {
-        transform:rotate(0deg);
+        transform: rotate(0deg);
     }
     to {
-        transform:rotate(360deg);
+        transform: rotate(360deg);
     }
 }
