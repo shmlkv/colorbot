@@ -46,7 +46,8 @@ class ToHexController extends TelegramBaseController {
     toHexHandler($) {
         console.log('toHEX ' + $.query.color)
         if (isValidRGB($.query.color)) {
-            $.sendMessage(hexrgb.rgb2hex($.query.color))
+            //$.sendMessage(hexrgb.rgb2hex($.query.color))
+            sendColorPic($, $.query.color, hexrgb.rgb2hex($.query.color), hexrgb.rgb2hex($.query.color))
         } else {
             $.sendMessage(colorErr($))
         }
@@ -64,7 +65,7 @@ class ToRgbController extends TelegramBaseController {
     toRgbHandler($) {
         console.log('toRGB ' + $.query.color)
         if (isValidHEX($.query.color)) {
-            $.sendMessage(hexrgb.hex2rgb($.query.color))
+            //$.sendMessage(hexrgb.hex2rgb($.query.color))
             sendColorPic($, $.query.color, hexrgb.hex2rgb($.query.color), hexrgb.hex2rgb($.query.color))
             
         } else {
@@ -289,7 +290,7 @@ function colorErr($) {
 }
 
 function urlErr($) {
-    $.sendMessage('Sorry, but isn\'t valid url', { parse_mode: 'Markdown' });
+    $.sendMessage('Sorry, but isn\'t valid url \n Note, that url starts with `http://`', { parse_mode: 'Markdown' });
 }
 function finishedReading(filename) {
     fs.unlink(filename)
