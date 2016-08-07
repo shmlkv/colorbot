@@ -9,8 +9,7 @@ var config = require('./config.json'),
     urlToImage = require('url-to-image'),
     gm = require('gm').subClass({ imageMagick: true })
 
-//var botan = require('botanio')(config.botanio);
-
+var botan = require('botanio')(config.botanio);
 var Telegram = require('telegram-node-bot'),
     TelegramBaseController = Telegram.TelegramBaseController,
     tg = new Telegram.Telegram(config.token)
@@ -18,7 +17,7 @@ var Telegram = require('telegram-node-bot'),
 class StartController extends TelegramBaseController {
 
     startHandler($) {
-        $.sendMessage('Hello! 👋\n\nWhat I can do:\n\n• Preview of colors like: `#3300ff`, `#30f` or `rgb(51,0,255)`\n• Convert RGB to HEX /toHEX `rgb(51,0,255)` \n• Convert HEX to RGB /toRGB `#3300ff`\n• /randomColor generate random color\n• /siteColors `http://site.com/` to get color scheme of site \n• /help for this message', { parse_mode: 'Markdown' });
+        $.sendMessage('Hello! 👋\n\nWhat I can do:\n\n• Preview of colors like: `#3300ff`, `#30f` or `rgb(51,0,255)`\n• Convert RGB to HEX /tohex `rgb(51,0,255)` \n• Convert HEX to RGB /torgb `#3300ff`\n• /randomcolor generate random color\n• /sitescheme `http://site.com/` to get color scheme of site \n• /help for this message', { parse_mode: 'Markdown' });
     }
 
     get routes() {
@@ -67,7 +66,7 @@ class ToRgbController extends TelegramBaseController {
         if (isValidHEX($.query.color)) {
             //$.sendMessage(hexrgb.hex2rgb($.query.color))
             sendColorPic($, $.query.color, hexrgb.hex2rgb($.query.color), hexrgb.hex2rgb($.query.color))
-            
+
         } else {
             $.sendMessage(colorErr($))
         }
@@ -138,14 +137,8 @@ class PingController extends TelegramBaseController {
 class RandomColorController extends TelegramBaseController {
 
     randomColorHandler($) {
-        var random = Math.random();
-        var exponent = --random.toExponential().split('-')[1];
-
-        random *= Math.pow(10, exponent);
-
-        var color = '#' + (~~(random * (1 << 24))).toString(16);
-
-        sendColorPic($, color, '\nRandom color')
+        
+        sendColorPic($, getRandomColor(), '\nRandom color')
     }
 
     get routes() {
@@ -211,6 +204,7 @@ tg.router
     .when(['/tohex :color'], new ToHexController())
     .when(['/torgb :color'], new ToRgbController())
     .when(['/randomcolor'], new RandomColorController())
+    .when(['/randomСolor'], new RandomColorController())
     .when(['/sitescheme :url'], new SiteSchemeController())
     .when(['/ping'], new PingController())
     .otherwise(new OtherwiseController())
@@ -231,7 +225,6 @@ function sendColorPic($, color, desc, textonpic) {
             .write(filename, function (err) {
                 if (!err) {
                     if (desc) {
-
                         $.sendPhoto(fs.createReadStream(filename), { caption: color + '\n' + desc })
                     }
                 }
@@ -296,4 +289,13 @@ function finishedReading(filename) {
     fs.unlink(filename)
     fs.unlinkSync(filename);
     console.log("!")
+}
+function getRandomColor() {
+    var letters = '0123456789ABCDEF'.split('');
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    console.log('Generated color: ' + color)
+    return color;
 }
