@@ -18,6 +18,7 @@ class StartController extends TelegramBaseController {
 
     startHandler($) {
         $.sendMessage('Hello! 👋\n\nWhat I can do:\n\n• Preview of colors like: `#3300ff`, `#30f` or `rgb(51,0,255)`\n• Convert RGB to HEX /tohex `rgb(51,0,255)` \n• Convert HEX to RGB /torgb `#3300ff`\n• /randomcolor generate random color\n• /sitescheme `http://site.com/` to get color scheme of site \n• /help for this message', { parse_mode: 'Markdown' });
+        botan.track($._message, 'Start');
     }
 
     get routes() {
@@ -31,7 +32,9 @@ class HelpController extends TelegramBaseController {
 
     helpHandler($) {
         $.sendMessage('Hello! 👋\n\nWhat I can do:\n\n• Preview of colors like: `#3300ff`, `#30f` or `rgb(51,0,255)`\n• Convert RGB to HEX /tohex `rgb(51,0,255)` \n• Convert HEX to RGB /torgb `#3300ff`\n• /randomcolor generate random color\n• /sitescheme `http://site.com/` to get color scheme of site \n• /help for this message', { parse_mode: 'Markdown' });
-    }
+        botan.track($._message, 'Help');
+        
+}
 
     get routes() {
         return {
@@ -50,6 +53,8 @@ class ToHexController extends TelegramBaseController {
         } else {
             $.sendMessage(colorErr($))
         }
+        botan.track($._message, 'toHEX');
+        
     }
 
     get routes() {
@@ -70,6 +75,8 @@ class ToRgbController extends TelegramBaseController {
         } else {
             $.sendMessage(colorErr($))
         }
+        botan.track($._message, 'toRGB');
+        
     }
 
     get routes() {
@@ -82,6 +89,8 @@ class ToRgbController extends TelegramBaseController {
 class SiteSchemeController extends TelegramBaseController {
 
     siteSchemeHandler($) {
+        botan.track($._message, 'siteColorScheme');
+        
         if (isValidURL($.query.url)) {
             $.sendMessage('Okay, now you need to wait..~', { parse_mode: 'Markdown' });
 
@@ -125,6 +134,8 @@ class PingController extends TelegramBaseController {
 
     pingHandler($) {
         $.sendMessage("Murr~");
+        botan.track($._message, 'Ping~');
+        
     }
 
     get routes() {
@@ -137,7 +148,8 @@ class PingController extends TelegramBaseController {
 class RandomColorController extends TelegramBaseController {
 
     randomColorHandler($) {
-        
+        botan.track($._message, 'RandomColor');
+
         sendColorPic($, getRandomColor(), '\nRandom color')
     }
 
@@ -150,6 +162,8 @@ class RandomColorController extends TelegramBaseController {
 
 class OtherwiseController extends TelegramBaseController {
     handle($) {
+        botan.track($._message, 'Otherwise');
+        
         // console.log($.message._photo[0]._fileId)
         if ($.message._photo) {
             // $.sendMessage($.message._document)
@@ -210,6 +224,7 @@ tg.router
     .otherwise(new OtherwiseController())
 
 function sendColorPic($, color, desc, textonpic) {
+    botan.track($._message, '-colorPic');
 
     console.log('Sending pic with color: ' + color)
     color = color.toLowerCase()
