@@ -33,8 +33,8 @@ class HelpController extends TelegramBaseController {
     helpHandler($) {
         $.sendMessage('Hello! 👋\n\nWhat I can do:\n\n• Preview of colors like: `#3300ff`, `#30f` or `rgb(51,0,255)`\n• Convert RGB to HEX /tohex `rgb(51,0,255)` \n• Convert HEX to RGB /torgb `#3300ff`\n• /randomcolor generate random color\n• /sitescheme `http://site.com/` to get color scheme of site \n• /help for this message', { parse_mode: 'Markdown' });
         botan.track($._message, 'Help');
-        
-}
+
+    }
 
     get routes() {
         return {
@@ -54,7 +54,7 @@ class ToHexController extends TelegramBaseController {
             $.sendMessage(colorErr($))
         }
         botan.track($._message, 'toHEX');
-        
+
     }
 
     get routes() {
@@ -76,7 +76,7 @@ class ToRgbController extends TelegramBaseController {
             $.sendMessage(colorErr($))
         }
         botan.track($._message, 'toRGB');
-        
+
     }
 
     get routes() {
@@ -90,11 +90,11 @@ class SiteSchemeController extends TelegramBaseController {
 
     siteSchemeHandler($) {
         botan.track($._message, 'siteColorScheme');
-        
+
         if (isValidURL($.query.url)) {
             $.sendMessage('Okay, now you need to wait..~', { parse_mode: 'Markdown' });
 
-            var dir = './temp/' + Math.random().toString(36).substr(2, 5) + '.png'
+            var dir = './temp/siteimage.png'
             console.log(dir)
             urlToImage($.query.url, dir, { width: 600, height: 600 }).then(function () {
                 colorPalette(dir, 5, function (err, colors) {
@@ -135,7 +135,7 @@ class PingController extends TelegramBaseController {
     pingHandler($) {
         $.sendMessage("Murr~");
         botan.track($._message, 'Ping~');
-        
+
     }
 
     get routes() {
@@ -163,25 +163,25 @@ class RandomColorController extends TelegramBaseController {
 class OtherwiseController extends TelegramBaseController {
     handle($) {
         botan.track($._message, 'Otherwise');
-        
+
         // console.log($.message._photo[0]._fileId)
         if ($.message._photo) {
-            // $.sendMessage($.message._document)
+            $.sendMessage('I don\'t know what to do with pics :(')
             //$.sendMessage($.message._photo._fileId)
-            //$.sendPhoto($.message._photo[0].fileId);
-        }
-        if ($.message.photo) {
-            $.sendMessage($.message._photo[0].fileId);
-            $.sendPhoto($.message._photo[0].fileId)
+            // $.sendPhoto($.message._photo[0].fileId);
+
+            // if ($.message.photo) {
+            //     $.sendMessage($.message._photo[0].fileId);
+            //     $.sendPhoto($.message._photo[0].fileId)
             //$.sendMessage('https://api.telegram.org/file/bot' + config.token + '/' + $.message.photo[0].file_id)
-            // colorPalette('https://new.vk.com/images/safari_152.png', 3, function (err, colors) {
+            // colorPalette($.message._photo[0].fileId, 3, function (err, colors) {
             //     if (err) {
-            //         $.sendMessage(err);
             //         console.error(err);
             //         return false;
             //     }
             //     var detected_colors = []
             //     colors.result.forEach(function (item, index, array) {
+            //         console.log(item)
             //         detected_colors.push('#' + item.hex.toLowerCase())
             //     });
 
@@ -246,8 +246,8 @@ function sendColorPic($, color, desc, textonpic) {
             })
     } else {
         gm(460, 460, color)
-            .fontSize(50)
-            .drawText(130, 240, color)
+            //.fontSize(50)
+            //.drawText(130, 240, color)
             .write(filename, function (err) {
                 if (!err) {
                     if (desc) {
