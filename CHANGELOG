@@ -1,5 +1,7 @@
 # CHANGELOG:
 
+### v1.1
+  - Reply to the command message
 ### v1.0
   - Preview of colors like: `#3300ff`, `#30f` or `rgb(51, 0, 255)`
   - Convert RGB to HEX `/tohex rgb(51,0,255)`
