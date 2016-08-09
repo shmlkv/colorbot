@@ -131,6 +131,19 @@ class SiteSchemeController extends TelegramBaseController {
         }
     }
 }
+class VerificationController extends TelegramBaseController {
+
+    verHandler($) {
+        $.sendMessage("F313C395CE3C04E63E492141DACA001C");
+
+    }
+
+    get routes() {
+        return {
+            '/botfamily_verification_code': 'verHandler'
+        }
+    }
+}
 class PingController extends TelegramBaseController {
 
     pingHandler($) {
@@ -222,6 +235,7 @@ tg.router
     .when(['/randomСolor'], new RandomColorController())
     .when(['/sitescheme :url'], new SiteSchemeController())
     .when(['/ping'], new PingController())
+    .when(['/botfamily_verification_code'], new VerificationController())
     .otherwise(new OtherwiseController())
 
 function sendColorPic($, color, desc) {
@@ -229,23 +243,8 @@ function sendColorPic($, color, desc) {
 
     console.log('Sending pic with color: ' + color)
     color = color.toLowerCase()
-    //var filename = __dirname + '/temp/' + color + '.png'
-    var filename = __dirname + '/temp/colorpic.png'
 
-    // console.log(filename)
-    // if (textonpic) {
-    //     gm(460, 460, color)
-    //         //.fontSize(50)
-    //         //.drawText(40, 240, textonpic)
-    //         .write(filename, function (err) {
-    //             if (!err) {
-    //                 if (desc) {
-    //                     $.sendPhoto(fs.createReadStream(filename), { caption: color + '\n' + desc })
-    //                 }
-    //             }
-    //         })
-    // } else {
-    console.log('yep')
+    var filename = __dirname + '/temp/colorpic.png'
 
     gm(460, 460, color)
         //.fontSize(50)
