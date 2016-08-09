@@ -229,7 +229,6 @@ function sendColorPic($, color, desc) {
 
     console.log('Sending pic with color: ' + color)
     color = color.toLowerCase()
-
     //var filename = __dirname + '/temp/' + color + '.png'
     var filename = __dirname + '/temp/colorpic.png'
 
@@ -246,40 +245,23 @@ function sendColorPic($, color, desc) {
     //             }
     //         })
     // } else {
+    console.log('yep')
+
     gm(460, 460, color)
         //.fontSize(50)
         //.drawText(130, 240, color)
         .write(filename, function (err) {
             if (!err) {
-                if (desc) {
-                    //ms = new Message ()
-                    if (desc) {
-                        var options = { caption: desc, reply_to_message_id: $.message._messageId }
-                    } else {
-                        var options = { reply_to_message_id: $.message._messageId }
+                if (desc) 
+                    var options = { caption: desc, reply_to_message_id: $.message._messageId }
+                 else
+                    var options = { reply_to_message_id: $.message._messageId }
 
-                    }
-                    $.sendPhoto(fs.createReadStream(filename), options)
+                $.sendPhoto(fs.createReadStream(filename), options)
 
-                    //tg.api.sendMessage($.chatId, 'asd', options)
-                    //console.log($.message._messageId)
-                    // $.sendPhoto(fs.createReadStream(filename), options)
-                    // } else {
-                    // fs.readFile(filename, function () {
-
-                    //     var stream = fs.createReadStream(filename)
-                    //     stream.pipe(res);
-                    //     stream.on('close', function () {
-                    //         fs.unlink(filename)
-                    //         console.log("!")
-                    //     });
-                    // })
-
-                }
-
-            } else {
-                console.error(err)
-            }
+        } else {
+            console.error(err)
+        }
         });
     // }
 
