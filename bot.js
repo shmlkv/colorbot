@@ -13,11 +13,11 @@ var botan = require('botanio')(config.botanio);
 var Telegram = require('telegram-node-bot'),
     TelegramBaseController = Telegram.TelegramBaseController,
     tg = new Telegram.Telegram(config.token)
-
+//'232826312:AAFnHQiy-R0JxHiF9w_ri3i_4f3GckpFx2Q'
 class StartController extends TelegramBaseController {
 
     startHandler($) {
-        $.sendMessage('Hello! 👋\n\nWhat I can do:\n\n• Preview of colors like: `#3300ff`, `#30f` or `rgb(51,0,255)`\n• Convert RGB to HEX /tohex `rgb(51,0,255)` \n• Convert HEX to RGB /torgb `#3300ff`\n• /randomcolor generate random color\n• /sitescheme `http://site.com/` to get color scheme of site \n• /help for this message', { parse_mode: 'Markdown' });
+        $.sendMessage('Hello! 👋\n\nWhat I can do:\n\n• Preview of colors like: `#3300ff`, `#30f` or `rgb(51,0,255)`\n• Convert RGB to HEX /tohex `rgb(51,0,255)` \n• Convert HEX to RGB /torgb `#3300ff`\n• /randomcolor generate random color\n• /help for this message', { parse_mode: 'Markdown' });
         botan.track($._message, 'Start');
     }
 
@@ -31,7 +31,8 @@ class StartController extends TelegramBaseController {
 class HelpController extends TelegramBaseController {
 
     helpHandler($) {
-        $.sendMessage('Hello! 👋\n\nWhat I can do:\n\n• Preview of colors like: `#3300ff`, `#30f` or `rgb(51,0,255)`\n• Convert RGB to HEX /tohex `rgb(51,0,255)` \n• Convert HEX to RGB /torgb `#3300ff`\n• /randomcolor generate random color\n• /sitescheme `http://site.com/` to get color scheme of site \n• /help for this message', { parse_mode: 'Markdown' });
+        $.sendMessage('Hello! 👋\n\nWhat I can do:\n\n• Preview of colors like: `#3300ff`, `#30f` or `rgb(51,0,255)`\n• Convert RGB to HEX /tohex `rgb(51,0,255)` \n• Convert HEX to RGB /torgb `#3300ff`\n• /randomcolor generate random color\n• /help for this message', { parse_mode: 'Markdown' });
+        //• /sitescheme `http://site.com/` to get color scheme of site 
         botan.track($._message, 'Help');
 
     }
@@ -148,9 +149,9 @@ class PingController extends TelegramBaseController {
 class RandomColorController extends TelegramBaseController {
 
     randomColorHandler($) {
-        botan.track($._message, 'RandomColor');
-
-        sendColorPic($, getRandomColor(), '\nRandom color')
+        botan.track($._message, 'RandomColor')
+        var rnd = getRandomColor()
+        sendColorPic($, rnd, rnd)
     }
 
     get routes() {
@@ -223,7 +224,7 @@ tg.router
     .when(['/ping'], new PingController())
     .otherwise(new OtherwiseController())
 
-function sendColorPic($, color, desc, textonpic) {
+function sendColorPic($, color, desc) {
     botan.track($._message, '-colorPic');
 
     console.log('Sending pic with color: ' + color)
@@ -233,46 +234,54 @@ function sendColorPic($, color, desc, textonpic) {
     var filename = __dirname + '/temp/colorpic.png'
 
     // console.log(filename)
-    if (textonpic) {
-        gm(460, 460, color)
-            .fontSize(50)
-            .drawText(40, 240, textonpic)
-            .write(filename, function (err) {
-                if (!err) {
+    // if (textonpic) {
+    //     gm(460, 460, color)
+    //         //.fontSize(50)
+    //         //.drawText(40, 240, textonpic)
+    //         .write(filename, function (err) {
+    //             if (!err) {
+    //                 if (desc) {
+    //                     $.sendPhoto(fs.createReadStream(filename), { caption: color + '\n' + desc })
+    //                 }
+    //             }
+    //         })
+    // } else {
+    gm(460, 460, color)
+        //.fontSize(50)
+        //.drawText(130, 240, color)
+        .write(filename, function (err) {
+            if (!err) {
+                if (desc) {
+                    //ms = new Message ()
                     if (desc) {
-                        $.sendPhoto(fs.createReadStream(filename), { caption: color + '\n' + desc })
-                    }
-                }
-            })
-    } else {
-        gm(460, 460, color)
-            //.fontSize(50)
-            //.drawText(130, 240, color)
-            .write(filename, function (err) {
-                if (!err) {
-                    if (desc) {
-
-                        $.sendPhoto(fs.createReadStream(filename), { caption: color + desc })
-
+                        var options = { caption: desc, reply_to_message_id: $.message._messageId }
                     } else {
-                        // fs.readFile(filename, function () {
-                        $.sendPhoto(fs.createReadStream(filename), { caption: color })
-
-                        //     var stream = fs.createReadStream(filename)
-                        //     stream.pipe(res);
-                        //     stream.on('close', function () {
-                        //         fs.unlink(filename)
-                        //         console.log("!")
-                        //     });
-                        // })
+                        var options = { reply_to_message_id: $.message._messageId }
 
                     }
+                    $.sendPhoto(fs.createReadStream(filename), options)
 
-                } else {
-                    console.error(err)
+                    //tg.api.sendMessage($.chatId, 'asd', options)
+                    //console.log($.message._messageId)
+                    // $.sendPhoto(fs.createReadStream(filename), options)
+                    // } else {
+                    // fs.readFile(filename, function () {
+
+                    //     var stream = fs.createReadStream(filename)
+                    //     stream.pipe(res);
+                    //     stream.on('close', function () {
+                    //         fs.unlink(filename)
+                    //         console.log("!")
+                    //     });
+                    // })
+
                 }
-            });
-    }
+
+            } else {
+                console.error(err)
+            }
+        });
+    // }
 
 
 }
