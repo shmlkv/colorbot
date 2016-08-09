@@ -1,7 +1,1 @@
-# CHANGELOG:
-
-### v1.0
-  - Preview of colors like: `#3300ff`, `#30f` or `rgb(51, 0, 255)`
-  - Convert RGB to HEX `/tohex rgb(51,0,255)`
-  - Convert HEX to RGB `/torgb #3300ff`
-  - Generate random color `/randomcolor`
+# ~Yep

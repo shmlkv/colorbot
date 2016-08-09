@@ -1,19 +1,16 @@
-Project TODOs:
-    Main:
-	    ☐ Dominant color on photo sending
-	    ☐ Statistic
-	    ☐ deleting color file after sending
-	    ☐ More variants for converting - like JAVA color
-	    ☐ Color schemes based on color
-	    ☐ Color schemes based on two colors  @high
-	    ☐ not async sending colors in /sitecolors
-	    ☐ Is valid color (one func for all types)
-    For fun:
-        ☐ Rainbow in description of bot
-    Final:
-        ☐ Desc of bot 
-        ☐ Post bot in StoreBot
+TODOs:
+	☐ Dominant color on photo sending
+    ☐ More variants for converting - like JAVA color
+	☐ Color schemes based on color
+	☐ Color schemes based on two colors  @high
+	☐ not async sending colors in /sitecolors
+	☐ Is valid color (one func for all types)
+
+	✘ deleting color file after sending @cancelled
 Done:
+	✔ Statistic @done
+    ✔ Desc of bot @done
+    ✔ Post bot in StoreBot @done
     ✔ ImageMagick support @done
     ✔ Image with #color on sending color @done
     ✔ Random color @done
