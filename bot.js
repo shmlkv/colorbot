@@ -157,10 +157,17 @@ class FeedBackController extends TelegramBaseController {
                 error: 'sorry, wrong input',
                 validator: (message, callback) => {
                     if (message.text) {
-                        $.sendMessage('Thank you! Message was sent. We will read it and reply to you as soon as we can. /help')
+                        console.log(message.text);
+                        if (message.text == '/cancel') {
+                            $.sendMessage('Oops! Okey, bro.')
+                            return false
+                        } else {
+                            $.sendMessage('Thank you! Message was sent. We will read it and reply to you as soon as we can. /help')
 
-                        callback(true, message) //you must pass the result also
-                        return
+                            callback(true, message) //you must pass the result also
+                            return
+                        }
+
                     }
 
                     callback(false)
@@ -172,7 +179,6 @@ class FeedBackController extends TelegramBaseController {
             //result.feedback._from._id
             //result.feedback._from._username
             //result.feedback._text
-
             var options = { parse_mode: 'Markdown' }
             var time = new Date();
             var timeFormated =
