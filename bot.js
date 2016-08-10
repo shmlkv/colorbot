@@ -153,7 +153,7 @@ class FeedBackController extends TelegramBaseController {
     feedbackHandler($) {
         const form = {
             feedback: {
-                q: 'What do you want to send the bot creators?\n\nType /cancel to cancel the opearation.',
+                q: 'What do you want to send the bot creators?\n\nType /cancel to cancel the operation.',
                 error: 'sorry, wrong input',
                 validator: (message, callback) => {
                     if (message.text) {
