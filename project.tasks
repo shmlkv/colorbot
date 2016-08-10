@@ -5,6 +5,8 @@ TODOs:
 	☐ Color schemes based on two colors  @high
 	☐ not async sending colors in /sitecolors
 	☐ Is valid color (one func for all types)
+	☐ Feedback! @high
+	☐ Sending new things to people! @high
 
 	✘ deleting color file after sending @cancelled
 Done:

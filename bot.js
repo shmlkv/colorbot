@@ -9,11 +9,14 @@ var config = require('./config.json'),
     urlToImage = require('url-to-image'),
     gm = require('gm').subClass({ imageMagick: true })
 
-var botan = require('botanio')(config.botanio);
+//var botan = require('botanio')(config.botanio);
+var botan = require('botanio')('asd');
+
 var Telegram = require('telegram-node-bot'),
     TelegramBaseController = Telegram.TelegramBaseController,
-    tg = new Telegram.Telegram(config.token)
-//'232826312:AAFnHQiy-R0JxHiF9w_ri3i_4f3GckpFx2Q'
+    //tg = new Telegram.Telegram(config.token)
+    tg = new Telegram.Telegram('247937051:AAEBzwnRtdMvkUjkRm1YDCNgAKPCc5EzrvY')
+
 class StartController extends TelegramBaseController {
 
     startHandler($) {
@@ -144,6 +147,56 @@ class VerificationController extends TelegramBaseController {
         }
     }
 }
+
+class FeedBackController extends TelegramBaseController {
+
+    feedbackHandler($) {
+        const form = {
+            feedback: {
+                q: 'What do you want to send the bot creators?\n\nType /cancel to cancel the opearation.',
+                error: 'sorry, wrong input',
+                validator: (message, callback) => {
+                    if (message.text) {
+                        $.sendMessage('Thank you! Message was sent. We will read it and reply to you as soon as we can. /help')
+
+                        callback(true, message) //you must pass the result also
+                        return
+                    }
+
+                    callback(false)
+                }
+            }
+        }
+
+        $.runForm(form, (result) => {
+            //result.feedback._from._id
+            //result.feedback._from._username
+            //result.feedback._text
+
+            var options = { parse_mode: 'Markdown' }
+            var time = new Date();
+            var timeFormated =
+                ("0" + time.getDate()).slice(-2) + "." +
+                ("0" + time.getMonth()).slice(-2) + "." +
+                ("0" + time.getFullYear()).slice(-2) +
+                ' ' +
+                ("0" + time.getHours()).slice(-2) + ":" +
+                ("0" + time.getMinutes()).slice(-2) + ":" +
+                ("0" + time.getSeconds()).slice(-2)
+            console.log('FeedBack: ' + result.feedback._from._username + ': ' + result.feedback._text)
+            tg.api.sendMessage('94556687', result.feedback._from._id + '~@' + result.feedback._from._username + '\n*' + timeFormated + '*\n\n' + result.feedback._text, options) 
+        })
+        botan.track($._message, 'FeedBack');
+
+    }
+
+    get routes() {
+        return {
+            '/feedback': 'feedbackHandler'
+        }
+    }
+}
+
 class PingController extends TelegramBaseController {
 
     pingHandler($) {
@@ -176,54 +229,40 @@ class RandomColorController extends TelegramBaseController {
 
 class OtherwiseController extends TelegramBaseController {
     handle($) {
-        botan.track($._message, 'Otherwise');
+        // console.log($._message._replyToMessage._messageId)
+        //$._message._replyToMessage._messageId
+        if ($.message._from._username === 'shmlkv' && $._message._replyToMessage && $._message._replyToMessage._text.split('~')[0]) {
+            var userid = $._message._replyToMessage._text.split('~')[0];
 
-        // console.log($.message._photo[0]._fileId)
-        if ($.message._photo) {
-            $.sendMessage('I don\'t know what to do with pics :(')
-            //$.sendMessage($.message._photo._fileId)
-            // $.sendPhoto($.message._photo[0].fileId);
+            console.log('admin is reply')
+            var options = {  parse_mode: 'Markdown' }
 
-            // if ($.message.photo) {
-            //     $.sendMessage($.message._photo[0].fileId);
-            //     $.sendPhoto($.message._photo[0].fileId)
-            //$.sendMessage('https://api.telegram.org/file/bot' + config.token + '/' + $.message.photo[0].file_id)
-            // colorPalette($.message._photo[0].fileId, 3, function (err, colors) {
-            //     if (err) {
-            //         console.error(err);
-            //         return false;
-            //     }
-            //     var detected_colors = []
-            //     colors.result.forEach(function (item, index, array) {
-            //         console.log(item)
-            //         detected_colors.push('#' + item.hex.toLowerCase())
-            //     });
-
-            //     console.log(detected_colors)
-            //     $.sendMessage('#' + colors.result[0].hex.toLowerCase());
-            // });
-
-
-
-            // var downloadUrl = getFile($.message.photo.file_id)
-            // /console.log(getFile($.message.photo.file_id))
-            //          var filename = '.\\temp\\' + $.message.photo[0].file_id + '.png'
-
-        } else if (isValidHEX($.message.text)) {
-            if ($.message.text.length === 7) {
-                var color = $.message.text;
-            } else if ($.message.text.length === 4) {
-                var color = '#' + $.message.text[1] + $.message.text[1]
-                    + $.message.text[2] + $.message.text[2]
-                    + $.message.text[3] + $.message.text[3]
-            } else { colorErr($) }
-
-            sendColorPic($, color)
-        } else if (isValidRGB($.message.text)) {
-            sendColorPic($, hexrgb.rgb2hex($.message.text))
+            tg.api.sendMessage(userid, 'Developer bot replied to your message:\n\n' + $.message._text + '\n\nSend me /feedback command if you want to write something else.', options)
+            botan.track($._message, 'FeedBack');
+            
         } else {
-            colorErr($)
+            botan.track($._message, 'Otherwise');
+
+            // console.log($.message._photo[0]._fileId)
+            if ($.message._photo) {
+                $.sendMessage('I don\'t know what to do with pics :(')
+            } else if (isValidHEX($.message.text)) {
+                if ($.message.text.length === 7) {
+                    var color = $.message.text;
+                } else if ($.message.text.length === 4) {
+                    var color = '#' + $.message.text[1] + $.message.text[1]
+                        + $.message.text[2] + $.message.text[2]
+                        + $.message.text[3] + $.message.text[3]
+                } else { colorErr($) }
+
+                sendColorPic($, color)
+            } else if (isValidRGB($.message.text)) {
+                sendColorPic($, hexrgb.rgb2hex($.message.text))
+            } else {
+                colorErr($)
+            }
         }
+
     }
 }
 tg.router
@@ -236,6 +275,8 @@ tg.router
     .when(['/sitescheme :url'], new SiteSchemeController())
     .when(['/ping'], new PingController())
     .when(['/botfamily_verification_code'], new VerificationController())
+    .when(['/feedback'], new FeedBackController())
+
     .otherwise(new OtherwiseController())
 
 function sendColorPic($, color, desc) {
@@ -251,16 +292,16 @@ function sendColorPic($, color, desc) {
         //.drawText(130, 240, color)
         .write(filename, function (err) {
             if (!err) {
-                if (desc) 
+                if (desc)
                     var options = { caption: desc, reply_to_message_id: $.message._messageId }
-                 else
+                else
                     var options = { reply_to_message_id: $.message._messageId }
 
                 $.sendPhoto(fs.createReadStream(filename), options)
 
-        } else {
-            console.error(err)
-        }
+            } else {
+                console.error(err)
+            }
         });
     // }
 
