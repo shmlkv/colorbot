@@ -184,7 +184,7 @@ class FeedBackController extends TelegramBaseController {
                 ("0" + time.getMinutes()).slice(-2) + ":" +
                 ("0" + time.getSeconds()).slice(-2)
             console.log('FeedBack: ' + result.feedback._from._username + ': ' + result.feedback._text)
-            tg.api.sendMessage('94556687', result.feedback._from._id + '~@' + result.feedback._from._username + '\n*' + timeFormated + '*\n\n' + result.feedback._text, options) 
+            tg.api.sendMessage('94556687', result.feedback._from._id + '~@' + result.feedback._from._username + '\n*' + timeFormated + '*\n\n' + result.feedback._text, options)
         })
         botan.track($._message, 'FeedBack');
 
@@ -231,15 +231,16 @@ class OtherwiseController extends TelegramBaseController {
     handle($) {
         // console.log($._message._replyToMessage._оmessageId)
         //$._message._replyToMessage._messageId
-        if ($.message._from._username === 'shmlkv' && $._message._replyToMessage && $._message._replyToMessage._text.split('~')[0]) {
+        if ($.message._from._id == '94556687' && $._message._replyToMessage && !isNaN($._message._replyToMessage._text.split('~')[0])) {
             var userid = $._message._replyToMessage._text.split('~')[0];
-
             console.log('admin is reply')
-            var options = {  parse_mode: 'Markdown' }
+            var options = { parse_mode: 'Markdown' }
 
             tg.api.sendMessage(userid, 'Developer bot replied to your message:\n\n' + $.message._text + '\n\nSend me /feedback command if you want to write something else.', options)
+            tg.api.sendMessage('94556687', 'You have successfully answered *~*', options)
+
             botan.track($._message, 'FeedBack');
-            
+
         } else {
             botan.track($._message, 'Otherwise');
 
@@ -325,7 +326,7 @@ function isValidHEX(sample) {
 }
 
 function colorErr($) {
-    $.sendMessage('I dont think that it\'s a color', { parse_mode: 'Markdown' });
+    $.sendMessage('I don\'t think that it\'s a color', { parse_mode: 'Markdown' });
 }
 
 function urlErr($) {
