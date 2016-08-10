@@ -191,8 +191,9 @@ class FeedBackController extends TelegramBaseController {
                 ("0" + time.getSeconds()).slice(-2)
             console.log('FeedBack: ' + result.feedback._from._username + ': ' + result.feedback._text)
             tg.api.sendMessage('94556687', result.feedback._from._id + '~@' + result.feedback._from._username + '\n*' + timeFormated + '*\n\n' + result.feedback._text, options)
+            
+            botan.track($._message, 'FeedBack');
         })
-        botan.track($._message, 'FeedBack');
 
     }
 
