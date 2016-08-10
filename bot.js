@@ -237,7 +237,7 @@ class OtherwiseController extends TelegramBaseController {
             var options = { parse_mode: 'Markdown' }
 
             tg.api.sendMessage(userid, 'Developer bot replied to your message:\n\n' + $.message._text + '\n\nSend me /feedback command if you want to write something else.', options)
-            tg.api.sendMessage('94556687', 'You have successfully answered *~*', options)
+            tg.api.sendMessage($.message._from._id, 'You have successfully answered *~*', options)
 
             botan.track($._message, 'FeedBack');
 
