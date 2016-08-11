@@ -20,7 +20,7 @@ var Telegram = require('telegram-node-bot'),
 class StartController extends TelegramBaseController {
 
     startHandler($) {
-        $.sendMessage('Hello! 👋\n\nWhat I can do:\n\n• Preview of colors like: `#3300ff`, `#30f` or `rgb(51,0,255)`\n• Convert RGB to HEX /tohex `rgb(51,0,255)` \n• Convert HEX to RGB /torgb `#3300ff`\n• /randomcolor generate random color\n• /feedback if you have any ideas for improvement or corrective bot \n• /help for this message', { parse_mode: 'Markdown' });
+        $.sendMessage('Hello! 👋\n\nWhat I can do:\n\n• Preview of colors like: `#c0ffee`, `#cfe` or `rgb(192,255,238)`\n• Convert RGB to HEX /tohex `rgb(192,255,238)` \n• Convert HEX to RGB /torgb `#c0ffee`\n• /randomcolor generate random color\n• /feedback if you have any ideas for improvement or corrective bot \n• /help for this message', { parse_mode: 'Markdown' });
         botan.track($._message, 'Start');
     }
 
@@ -34,7 +34,7 @@ class StartController extends TelegramBaseController {
 class HelpController extends TelegramBaseController {
 
     helpHandler($) {
-        $.sendMessage('Hello! 👋\n\nWhat I can do:\n\n• Preview of colors like: `#3300ff`, `#30f` or `rgb(51,0,255)`\n• Convert RGB to HEX /tohex `rgb(51,0,255)` \n• Convert HEX to RGB /torgb `#3300ff`\n• /randomcolor generate random color\n• /feedback if you have any ideas for improvement or corrective bot \n• /help for this message', { parse_mode: 'Markdown' });
+        $.sendMessage('Hello! 👋\n\nWhat I can do:\n\n• Preview of colors like: `#c0ffee`, `#cfe` or `rgb(192,255,238)`\n• Convert RGB to HEX /tohex `rgb(192,255,238)` \n• Convert HEX to RGB /torgb `#c0ffee`\n• /randomcolor generate random color\n• /feedback if you have any ideas for improvement or corrective bot \n• /help for this message', { parse_mode: 'Markdown' });
         //• /sitescheme `http://site.com/` to get color scheme of site 
         botan.track($._message, 'Help');
 
@@ -294,7 +294,7 @@ function sendColorPic($, color, desc) {
     color = color.toLowerCase()
 
     var filename = __dirname + '/temp/colorpic.png'
-
+    //if($.message._from._id == '')
     gm(460, 460, color)
         //.fontSize(50)
         //.drawText(130, 240, color)

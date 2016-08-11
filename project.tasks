@@ -6,6 +6,7 @@ TODOs:
 	☐ not async sending colors in /sitecolors
 	☐ Is valid color (one func for all types)
 	☐ Sending new things to people! @high
+	☐ Gradient @high
 
 	✘ deleting color file after sending @cancelled
 Done:
