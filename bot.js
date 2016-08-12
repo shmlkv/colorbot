@@ -159,7 +159,7 @@ class FeedBackController extends TelegramBaseController {
                     if (message.text) {
                         console.log(message.text);
                         if (message.text == '/cancel') {
-                            $.sendMessage('Oops! Okey, bro.')
+                            $.sendMessage('Oops! Okay, bro.')
                             return false
                         } else {
                             $.sendMessage('Thank you! Message was sent. We will read it and reply to you as soon as we can. /help')
